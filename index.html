@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>STELLARIA · 감정을 채집하는 우주</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- 3D canvas -->
+  <canvas id="scene"></canvas>
+
+  <!-- 부팅 / 인트로 -->
+  <div id="intro" class="intro">
+    <div class="intro-inner glass">
+      <div class="intro-logo">✦ STELLARIA ✦</div>
+      <p class="intro-sub">감정을 채집하는 우주</p>
+      <p class="intro-desc">
+        광활한 3D 우주를 유영하며 별처럼 떠다니는 이모지를 채집하세요.<br/>
+        모은 감정을 조합해 세상에 하나뿐인 폭죽을 만들고, 밤하늘을 밝힙니다.
+      </p>
+      <div class="intro-controls">
+        <span><kbd>드래그</kbd> 시선 회전</span>
+        <span><kbd>휠</kbd> 확대·축소</span>
+        <span><kbd>W A S D</kbd> 유영</span>
+        <span><kbd>클릭/잡기</kbd> 채집</span>
+        <span><kbd>Space</kbd> 발사</span>
+      </div>
+      <button id="startBtn" class="btn-primary">우주로 진입</button>
+      <button id="enableHandBtn" class="btn-ghost">✋ 손으로 우주 탐험하기 (웹캠) — 핀치 줌·시선·유영·채집</button>
+    </div>
+  </div>
+
+  <!-- 상단 HUD -->
+  <header id="hud" class="hud hidden">
+    <div class="hud-left glass-mini">
+      <span class="hud-title">✦ STELLARIA</span>
+    </div>
+    <div class="hud-center glass-mini" id="hint">우주를 유영하며 빛나는 이모지에 다가가 채집하세요</div>
+    <div class="hud-right">
+      <button class="chip" id="btnCraft">✨ 폭죽 제작 <em id="collCount">0</em></button>
+      <button class="chip" id="btnArchive">📖 도감 <em id="archCount">0</em></button>
+      <button class="chip chip-icon" id="btnHand" title="손 인식">✋</button>
+    </div>
+  </header>
+
+  <!-- 채집 도크 (하단 미니 컬렉션) -->
+  <div id="dock" class="dock hidden"></div>
+
+  <!-- 초기화 버튼 (왼쪽 하단, 작고 은은하게) -->
+  <button id="btnReset" class="reset-btn hidden" title="수집한 이모지·도감·발사 기록 모두 초기화">↺ 초기화</button>
+
+  <!-- 손 커서 (메인 화면에서 손 위치 표시) -->
+  <div id="handCursor" class="hand-cursor"><span class="hc-dot"></span></div>
+  <div id="handCursorLabel" class="hand-cursor-label"></div>
+
+  <!-- 손 인식 상태 -->
+  <div id="handStatus" class="hand-status hidden">
+    <video id="handVideo" playsinline></video>
+    <canvas id="handCanvas"></canvas>
+    <div class="hand-label">✋ <span id="handGesture">손을 펼치세요</span></div>
+  </div>
+
+  <!-- 폭죽 제작 패널 -->
+  <div id="craft" class="panel hidden">
+    <div class="panel-card glass">
+      <button class="panel-close" data-close="craft">✕</button>
+      <h2>폭죽 제작실</h2>
+      <p class="panel-sub">채집한 감정 중 <b>3~5개</b>를 선택해 폭죽을 빚습니다.</p>
+      <div id="craftPalette" class="palette"></div>
+      <div class="craft-actions">
+        <div id="craftSelected" class="selected-row"></div>
+        <button id="btnForge" class="btn-primary" disabled>폭죽 빚기 ✦</button>
+      </div>
+      <div id="craftPreview" class="preview hidden"></div>
+    </div>
+  </div>
+
+  <!-- 도감 -->
+  <div id="archive" class="panel hidden">
+    <div class="panel-card glass wide">
+      <button class="panel-close" data-close="archive">✕</button>
+      <div class="archive-head">
+        <h2>📖 Firework Archive</h2>
+        <div class="archive-progress">
+          <span id="archProgressText">0 / 250 Complete</span>
+          <div class="bar"><div id="archProgressBar" class="bar-fill"></div></div>
+        </div>
+      </div>
+      <div id="archiveGrid" class="archive-grid"></div>
+    </div>
+  </div>
+
+  <!-- 발사 안내 토스트 -->
+  <div id="launchHint" class="launch-hint hidden">
+    <span><kbd>Space</kbd> 또는 ✊ 주먹 꾹 쥐고 1초 유지 후 손을 펴서 폭죽 발사</span>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script type="module" src="./src/main.js?v=28"></script>
+</body>
+</html>
